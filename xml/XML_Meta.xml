@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<datamodelinfo>
+    <datamodel name="IT-N-001-3" file="IT-N-001-3.XML" parentflg="false">
+        <keyitem>attrname</keyitem>
+    </datamodel>
+</datamodelinfo>

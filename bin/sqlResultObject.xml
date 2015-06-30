@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="jp.escofi.emr.transformer.sql.ResultObjectMapper">
+	<select id="select" parameterType="datamodel" resultType="attfield"><![CDATA[
+        select
+            f.ATTRIBUTE_FIELD_ID as attFieldID,
+            f.FROM_KEY_VALUE as fromKeyValue,
+            f.CONDITION_FLG as conditionFlg,
+            f.CONDITION_XML as conditionXml,
+            f.DELETE_FLG as delFlg,
+            e.ATTRIBUTE_TYPE_CD as dataType,
+            j.JAVA_CLASS_PATH as javaDataType,
+            e.ATTRIBUTE_FIELD_JP_NAME as jpName,
+            e.ATTRIBUTE_FIELD_EN_NAME as name
+        from TBL_TRN_ATTRIBUTE_FIELD as f
+            inner join (select
+                ATTRIBUTE_GROUP_ID,
+                ATTRIBUTE_ELEM_ID,
+                max(PRODUCT_ID) as PRODUCT_ID
+              from TBL_TRN_ATTRIBUTE_FIELD
+              where ATTRIBUTE_GROUP_ID = #{attGroupID}
+              and PRODUCT_ID in (select PRODUCT_ID
+                from TBL_M_PRODUCT
+                where RELEASE_DATE <= (select RELEASE_DATE
+                    from TBL_M_PRODUCT
+                    where PRODUCT_CD = #{productCd}
+                    and DELETE_FLG = 0
+                    )
+                )
+              and APPROVAL_FLG = 1
+              group by ATTRIBUTE_GROUP_ID, ATTRIBUTE_ELEM_ID
+            ) as n
+             on f.ATTRIBUTE_GROUP_ID = n.ATTRIBUTE_GROUP_ID
+             and f.ATTRIBUTE_ELEM_ID = n.ATTRIBUTE_ELEM_ID
+             and f.PRODUCT_ID = n.PRODUCT_ID
+            inner join (select
+                ATTRIBUTE_ELEM_ID,
+                ATTRIBUTE_FIELD_JP_NAME,
+                ATTRIBUTE_FIELD_EN_NAME,
+                ATTRIBUTE_TYPE_CD,
+                JAVA_CLASS_CD
+              from TBL_TRN_ATTRIBUTE_ELEM
+              where DELETE_FLG = 0
+              ) as e
+             on f.ATTRIBUTE_ELEM_ID = e.ATTRIBUTE_ELEM_ID
+             left outer join (select
+                JAVA_CLASS_CD,
+                JAVA_CLASS_PATH
+              from TBL_M_JAVADATA) as j
+             on e.JAVA_CLASS_CD = j.JAVA_CLASS_CD
+        order by name, fromKeyValue
+    ]]></select>
+</mapper>

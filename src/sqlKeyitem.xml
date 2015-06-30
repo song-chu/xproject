@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="jp.escofi.emr.transformer.sql.KeyitemMapper">
+	<select id="selectAttGroup" parameterType="datamodel" resultType="attgroup"><![CDATA[
+		select
+			g.ATTRIBUTE_GROUP_ID as attGroupID,
+			k01.KEY_EN_NAME as key01Name,
+			k02.KEY_EN_NAME as key02Name,
+			k03.KEY_EN_NAME as key03Name,
+			k04.KEY_EN_NAME as key04Name,
+			k05.KEY_EN_NAME as key05Name,
+			k06.KEY_EN_NAME as key06Name,
+			k07.KEY_EN_NAME as key07Name,
+			k08.KEY_EN_NAME as key08Name,
+			k09.KEY_EN_NAME as key09Name,
+			k10.KEY_EN_NAME as key10Name
+		from (select
+			  ATTRIBUTE_GROUP_ID,
+			  DATAMODEL_ID
+			  from TBL_TRN_ATTRIBUTE_GROUP
+			  where DATAMODEL_ID = #{dataModelID}
+              and PRODUCT_ID in (select PRODUCT_ID
+                from TBL_M_PRODUCT
+                where RELEASE_DATE <= (select RELEASE_DATE
+                    from TBL_M_PRODUCT
+                    where PRODUCT_CD = #{productCd}
+                    and DELETE_FLG = 0
+                    )
+                )
+			  and DELETE_FLG = 0
+			 ) g
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 1) k01
+			 on g.DATAMODEL_ID = k01.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 2) k02
+			 on g.DATAMODEL_ID = k02.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 3) k03
+			 on g.DATAMODEL_ID = k03.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 4) k04
+			 on g.DATAMODEL_ID = k04.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 5) k05
+			 on g.DATAMODEL_ID = k05.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 6) k06
+			 on g.DATAMODEL_ID = k06.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 7) k07
+			 on g.DATAMODEL_ID = k07.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 8) k08
+			 on g.DATAMODEL_ID = k08.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 9) k09
+			 on g.DATAMODEL_ID = k09.DATAMODEL_ID
+			 left outer join (select
+			 	DATAMODEL_ID,
+			 	KEY_EN_NAME
+			  from TBL_TRN_KEY_SOLVE
+			  where INDEX = 10) k10
+			 on g.DATAMODEL_ID = k10.DATAMODEL_ID
+	]]></select>
+	<select id="selectKeyItem" parameterType="datamodel" resultType="keyitem"><![CDATA[
+		select
+			g.ATTRIBUTE_GROUP_ID as attGroupID,
+			INDEX,
+			KEY_EN_NAME as name,
+			KEY,
+			ORG
+		from
+		(select
+		  ATTRIBUTE_GROUP_ID,
+		  DATAMODEL_ID
+		  from TBL_TRN_ATTRIBUTE_GROUP
+		  where DATAMODEL_ID = #{dataModelID}
+          and PRODUCT_ID in (select PRODUCT_ID
+            from TBL_M_PRODUCT
+            where RELEASE_DATE <= (select RELEASE_DATE
+                from TBL_M_PRODUCT
+                where PRODUCT_CD = #{productCd}
+                and DELETE_FLG = 0
+                )
+            )
+		  and DELETE_FLG = 0
+		) g
+		left outer join
+			(select
+			 	KEY_SOLVE_ID,
+			 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+			 	INDEX,
+			 	KEY_EN_NAME,
+			 	EXTEND_KEY_SOLVE_ID,
+			 	ATTRIBUTE_GROUP_ID,
+			 	KEY1 as KEY,
+			 	EXTEND_ATTRIBUTE_GROUP_ID
+			  from TBL_TRN_KEY_SOLVE , TBL_TRN_ATTRIBUTE_GROUP
+			  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+			  and TBL_TRN_KEY_SOLVE.INDEX = 1
+			  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY2 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 2
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY3 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 3
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY4 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 4
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY5 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 5
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY6 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 6
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY7 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 7
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY8 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 8
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY9 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 9
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	TBL_TRN_KEY_SOLVE.DATAMODEL_ID,
+				 	INDEX,
+				 	KEY_EN_NAME,
+				 	EXTEND_KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY10 as KEY,
+				 	EXTEND_ATTRIBUTE_GROUP_ID
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 10
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+			) keysol
+			left outer join (select
+			 	KEY_SOLVE_ID,
+			  	ATTRIBUTE_GROUP_ID,
+			 	KEY1 as ORG
+			  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+			  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+			  and TBL_TRN_KEY_SOLVE.INDEX = 1
+			  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY2 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 2
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY3 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 3
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY4 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 4
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY5 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 5
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY6 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 6
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY7 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 7
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY8 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 8
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY9 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 9
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+				union (
+				 select
+				 	KEY_SOLVE_ID,
+				 	ATTRIBUTE_GROUP_ID,
+				 	KEY10 as ORG
+				  from TBL_TRN_KEY_SOLVE, TBL_TRN_ATTRIBUTE_GROUP
+				  where TBL_TRN_KEY_SOLVE.DATAMODEL_ID = TBL_TRN_ATTRIBUTE_GROUP.DATAMODEL_ID
+				  and TBL_TRN_KEY_SOLVE.INDEX = 10
+				  and TBL_TRN_ATTRIBUTE_GROUP.DELETE_FLG = 0
+				)
+			) org
+			on keysol.EXTEND_KEY_SOLVE_ID = org.KEY_SOLVE_ID
+			and keysol.EXTEND_ATTRIBUTE_GROUP_ID = org.ATTRIBUTE_GROUP_ID
+		on g.ATTRIBUTE_GROUP_ID = keysol.ATTRIBUTE_GROUP_ID
+		order by attGroupID, index
+	]]></select>
+</mapper>

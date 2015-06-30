@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="Shift-JIS" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="jp.escofi.emr.transformer.sql.ArgsElemMapper" alias="argselem" />
+		<typeAlias type="jp.escofi.emr.transformer.sql.AttributeFieldMapper" alias="attfield" />
+		<typeAlias type="jp.escofi.emr.transformer.sql.AttributeGroupMapper" alias="attgroup" />
+		<typeAlias type="jp.escofi.emr.transformer.writer.DatamodelWriter" alias="datamodel" />
+		<typeAlias type="jp.escofi.emr.transformer.writer.KeyitemWriter" alias="keyitem" />
+        <typeAlias type="jp.escofi.emr.transformer.writer.ResultWriter" alias="result" />
+        <typeAlias type="jp.escofi.emr.transformer.writer.VarWriter" alias="var" />
+		<typeAlias type="jp.escofi.emr.transformer.writer.ListWriter" alias="dmlist" />
+		<typeAlias type="jp.escofi.emr.transformer.writer.MapWriter" alias="dmmap" />
+		<typeAlias type="jp.escofi.emr.transformer.writer.ObjectWriter" alias="dmobject" />
+		<typeAlias type="jp.escofi.emr.transformer.writer.RangeWriter" alias="dmrange" />
+		<typeAlias type="jp.escofi.emr.transformer.writer.SingleWriter" alias="dmsingle" />
+	</typeAliases>
+	<environments default="jdbc.connecter">
+		<environment id="jdbc.connecter">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="sqlProduct.xml" />
+		<mapper resource="sqlDatamodel.xml" />
+		<mapper resource="sqlKeyitem.xml" />
+		<mapper resource="sqlResultObject.xml" />
+		<mapper resource="sqlVar.xml" />
+		<mapper resource="sqlValue.xml" />
+	</mappers>
+</configuration>

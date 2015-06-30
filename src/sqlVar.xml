@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="jp.escofi.emr.transformer.sql.VarMapper">
+	<select id="select" resultType="argselem" parameterType="var">
+		select
+			e.ATTRIBUTE_TYPE_CD as dataType,
+			j.JAVA_CLASS_PATH as javaDataType,
+			e.ARGS_FIELD_JP_NAME as jpName,
+			e.ARG_INFO as varInfo,
+			e.DELETE_FLG as delFlg
+		from (select
+				ATTRIBUTE_TYPE_CD,
+				JAVA_CLASS_CD,
+				ARGS_FIELD_JP_NAME,
+				ARG_INFO,
+				DELETE_FLG
+			  from TBL_TRN_ARGS_ELEM
+			  where DATAMODEL_ID = #{dataModelID}
+			  and ARGS_FIELD_EN_NAME = #{name}
+			 ) e,
+			 (select
+			 	JAVA_CLASS_CD,
+			 	JAVA_CLASS_PATH
+			  from TBL_M_JAVADATA) j
+		where e.JAVA_CLASS_CD = j.JAVA_CLASS_CD
+	</select>
+</mapper>

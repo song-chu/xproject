@@ -1,0 +1,26 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="datamodelinfo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="datamodel" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="datamodel">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="keyitem" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="file" type="xs:string" use="required" />
+			<xs:attribute name="parentflg" type="xs:string" use="required" />
+			<xs:attribute name="extendsdm" type="xs:string" use="optional" />
+			<xs:attribute name="initvalue" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="keyitem">
+		<xs:complexType mixed="true">
+			<xs:attribute name="extendskey" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

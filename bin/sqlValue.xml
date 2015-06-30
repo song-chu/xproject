@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="jp.escofi.emr.transformer.sql.ValueMapper">
+	<select id="selectListAttFieldID" resultType="dmlist" parameterType="int">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			ANSER_NO as anserNo,
+			LIST_VALUE as value,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+	</select>
+	<select id="selectListAnserNo" resultType="dmlist" parameterType="result">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			LIST_VALUE as value,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+		and ANSER_NO = #{anserNo}
+	</select>
+	<select id="selectMapAttFieldID" resultType="dmmap" parameterType="int">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			ANSER_NO as anserNo,
+			MAP_KEY as key,
+			MAP_VALUE as value,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+	</select>
+	<select id="selectMapAnserNo" resultType="dmmap" parameterType="result">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			MAP_KEY as key,
+			MAP_VALUE as value,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+		and ANSER_NO = #{anserNo}
+	</select>
+	<select id="selectObjectAttFieldID" resultType="dmobject" parameterType="int">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			ANSER_NO as anserNo,
+			OBJECT_NAME as className,
+			OBJECT_INFO as subInfo,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+	</select>
+	<select id="selectObjectAnserNo" resultType="dmobject" parameterType="result">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			OBJECT_NAME as className,
+			OBJECT_INFO as subInfo,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+		and ANSER_NO = #{anserNo}
+	</select>
+	<select id="selectRangeAttFieldID" resultType="dmrange" parameterType="int">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			ANSER_NO as anserNo,
+			RANGE_UPPER as upper,
+			RANGE_UPPER_FLG as upperFlg,
+			RANGE_LOWER as lower,
+			RANGE_LOWER_FLG as lowerFlg,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+	</select>
+	<select id="selectRangeAnserNo" resultType="dmrange" parameterType="result">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			RANGE_UPPER as upper,
+			RANGE_UPPER_FLG as upperFlg,
+			RANGE_LOWER as lower,
+			RANGE_LOWER_FLG as lowerFlg,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+		and ANSER_NO = #{anserNo}
+	</select>
+	<select id="selectSingleAttFieldID" resultType="dmsingle" parameterType="int">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			ANSER_NO as anserNo,
+			SINGLE_VALUE as value,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+	</select>
+	<select id="selectSingleAnserNo" resultType="dmsingle" parameterType="result">
+		select
+			ATTRIBUTE_VALUE_ID as attValueID,
+			SINGLE_VALUE as value,
+			DROP_FLG as delFlg,
+			METAINFO as metaInfo
+		from TBL_TRN_ATTRIBUTE_VALUE
+		where ATTRIBUTE_FIELD_ID = #{attFieldID}
+		and ANSER_NO = #{anserNo}
+	</select>
+</mapper>

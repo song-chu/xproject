@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="datamodel">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="keyitem"  maxOccurs="unbounded" />
+			</xs:choice>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="keyitem">
+		<xs:complexType>
+			<xs:choice  minOccurs="0">
+				<xs:element ref="keyitem"  maxOccurs="unbounded" />
+				<xs:element ref="value"  maxOccurs="1" />
+			</xs:choice>
+			<xs:attribute name="key" type="xs:string" use="required" />
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="jpname" type="xs:string" use="optional" />
+			<xs:attribute name="org" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="value">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="single" />
+				<xs:element ref="list" />
+				<xs:element ref="map" />
+				<xs:element ref="range"/>
+				<xs:element ref="object"/>
+				<xs:element ref="condition" />
+				<xs:element ref="empty" />
+			</xs:choice>
+			<xs:attribute name="condflg" type="xs:boolean" use="required" />
+			<xs:attribute name="datatype" type="xs:string" use="required" />
+			<xs:attribute name="metainfo" type="xs:string" use="required" />
+			<xs:attribute name="delflg" type="xs:boolean" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="single">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="javadatatype" type="xs:string" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="list">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="elem" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="javadatatype" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="elem">
+		<xs:complexType >
+			<xs:simpleContent>
+				<xs:extension base="xs:string" >
+					<xs:attribute name="seq" type="xs:integer" use="optional" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="map">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="entry" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="javadatatype" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="entry">
+		<xs:complexType >
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="key" type="xs:string" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="range">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="upper" />
+				<xs:element ref="lower" />
+			</xs:sequence>
+			<xs:attribute name="javadatatype" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="upper">
+		<xs:complexType >
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="eq" type="xs:boolean" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="lower">
+		<xs:complexType >
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="eq" type="xs:boolean" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="object">
+		<xs:complexType>
+			<xs:attribute name="classname" type="xs:string" use="required" />
+			<xs:attribute name="subinfo" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="empty"/>
+	<xs:element name="condition">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="if" maxOccurs="unbounded" />
+				<xs:element ref="else" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="if">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="apply" />
+				<xs:element ref="if" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="result" minOccurs="0" />
+				<xs:element ref="else" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="apply">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="and" />
+				<xs:element ref="or" />
+				<xs:element ref="eq" />
+				<xs:element ref="neq" />
+				<xs:element ref="gt" />
+				<xs:element ref="geq" />
+				<xs:element ref="leq" />
+				<xs:element ref="lt" />
+				<xs:element ref="in" />
+				<xs:element ref="notin" />
+				<xs:element ref="subset" />
+				<xs:element ref="nsubset" />
+				<xs:element ref="intersect"/>
+				<xs:element ref="nintersect"/>
+				<xs:element ref="startswith"/>
+				<xs:element ref="nstartswith"/>
+				<xs:element ref="include"/>
+				<xs:element ref="exclude"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="else">
+		<xs:complexType>
+			<xs:choice>
+			<xs:sequence>
+				<xs:element ref="if" maxOccurs="unbounded"/>
+				<xs:element ref="else" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element ref="result" />
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="result">
+		<xs:complexType >
+			<xs:choice>
+				<xs:element ref="single" />
+				<xs:element ref="list" />
+				<xs:element ref="map" />
+				<xs:element ref="range"/>
+				<xs:element ref="object"/>
+				<xs:element ref="empty" />
+			</xs:choice>
+			<xs:attribute name="datatype" type="xs:string" use="required" />
+			<xs:attribute name="metainfo" type="xs:string" use="required" />
+			<xs:attribute name="delflg" type="xs:boolean" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="LogicOperand">
+			<xs:sequence>
+				<xs:element ref="apply" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	<xs:element name="and" type="LogicOperand" />
+	<xs:element name="or" type="LogicOperand" />
+	<xs:complexType name="RelOperand">
+		<xs:choice maxOccurs="2">
+			<xs:element ref="var" maxOccurs="2"/>
+			<xs:element ref="const" minOccurs="0"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="eq" type="RelOperand"/>
+	<xs:element name="neq" type="RelOperand"/>
+	<xs:element name="gt" type="RelOperand"/>
+	<xs:element name="geq" type="RelOperand"/>
+	<xs:element name="lt" type="RelOperand"/>
+	<xs:element name="leq" type="RelOperand"/>
+	<xs:element name="in" type="RelOperand"/>
+	<xs:element name="notin" type="RelOperand"/>
+	<xs:element name="subset" type="RelOperand"/>
+	<xs:element name="nsubset" type="RelOperand"/>
+	<xs:element name="intersect" type="RelOperand"/>
+	<xs:element name="nintersect" type="RelOperand"/>
+	<xs:element name="startswith" type="RelOperand"/>
+	<xs:element name="nstartswith" type="RelOperand"/>
+	<xs:complexType name="RelOperand_IncExc">
+		<xs:choice maxOccurs="3">
+			<xs:element ref="var" maxOccurs="3"/>
+			<xs:element ref="const" minOccurs="0" maxOccurs="2"/>
+		</xs:choice>
+		<xs:attribute name="lowereq" type="xs:boolean" use="required" />
+		<xs:attribute name="uppereq" type="xs:boolean" use="required" />
+	</xs:complexType>
+	<xs:element name="include" type="RelOperand_IncExc"/>
+	<xs:element name="exclude" type="RelOperand_IncExc"/>
+	<xs:complexType name="SingleType" mixed="true">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element ref="var" maxOccurs="unbounded"/>
+			<xs:element ref="const" minOccurs="0"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="var">
+		<xs:complexType >
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+				<xs:attribute name="varinfo" type="xs:string" use="required" />
+				<xs:attribute name="datatype" type="xs:string" use="required" />
+				<xs:attribute name="javadatatype" type="xs:string" use="required"/>
+				<xs:attribute name="jpname" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="const">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="single" />
+				<xs:element ref="set" />
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="set">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="elem" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="jp.escofi.emr.transformer.sql.DatamodelMapper">
+	<select id="select" parameterType="String" resultType="datamodel"><![CDATA[
+		select
+			d.DATAMODEL_ID as dataModelID,
+			d.DATAMODEL_EN_NAME as name,
+			d.XML_NAME as file,
+			e.DATAMODEL_EN_NAME as extendsDm,
+			d.FROM_KEY_FLG as fromKeyFlg,
+			d.FROM_KEY_EN_NAME as fromKeyEnName,
+			d.FROM_KEY_DEFAULTVALUE as fromKeyDefValue,
+			d.PRODUCT_ID as productID
+		from (select *
+			  from TBL_TRN_DATAMODEL
+			  where DELETE_FLG = 0
+			 ) d
+			inner join (select PRODUCT_ID
+			 from TBL_M_PRODUCT
+			 where RELEASE_DATE <= (select RELEASE_DATE
+			 	from TBL_M_PRODUCT
+			 	where PRODUCT_CD = #{productCd}
+				and DELETE_FLG = 0
+			 	)
+			 and DELETE_FLG = 0
+			) p
+			on d.PRODUCT_ID = p.PRODUCT_ID
+			left outer join (select
+				DATAMODEL_ID,
+				DATAMODEL_EN_NAME
+			 from TBL_TRN_DATAMODEL
+			 where DELETE_FLG = 0) e
+			on d.EXTEND_DATAMODEL_ID = e.DATAMODEL_ID
+		order by d.XML_OBJECT_INDEX, d.PRODUCT_ID, d.DATAMODEL_ID
+	]]></select>
+</mapper>
